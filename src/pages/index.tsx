@@ -1,17 +1,47 @@
 import axios from "axios";
 import { MerkleTree } from "./utils/merkleTree";
-import goodPeople from "./data/goodNames.json";
+import niceList from "./data/goodNames.json";
+import { verifyProof } from "./utils/verifyProof";
+
+const goodExample = () => {
+  const merkleTree = new MerkleTree(niceList);
+
+  // get the root
+  const root = merkleTree.getRoot();
+
+  // find the proof that norman block is in the list
+  const name: string = "Norman Block";
+  const index = niceList.findIndex((n) => n === name);
+  const proof = merkleTree.getProof(index);
+
+  // verify proof against the Merkle Root
+  console.log(verifyProof(proof, name, root)); // true, Norman Block is in the list!
+  return { proof, name, root };
+};
+
+const badExample = () => {
+  const merkleTree = new MerkleTree(niceList);
+
+  // get the root
+  const root = merkleTree.getRoot();
+
+  // find the proof that norman block is in the list
+  const name: string = "Alice dev";
+  const index = niceList.findIndex((n) => n === name);
+  const proof = merkleTree.getProof(index);
+
+  // verify proof against the Merkle Root
+  console.log(verifyProof(proof, name, root)); // true, Norman Block is in the list!
+  return { proof, name, root };
+};
 
 export default function Root() {
-  // TODO: how do we prove to the server we're on the nice list?
-
-  const res = axios.post("/api/gift", {
-    // TODO: add request body parameters here!
-  });
-
-  const check = () => {
+  const check = (isGood: boolean) => {
+    const send = isGood ? goodExample() : badExample();
+    console.log("client data", send);
+    return;
     axios
-      .post("/api/gift")
+      .post("/api/gift", send)
       .then((res) => {
         console.log(res.data);
       })
@@ -21,7 +51,8 @@ export default function Root() {
   return (
     <div>
       <h2>INDEXUS</h2>
-      <button onClick={check}>Click me mf</button>
+      <button onClick={() => check(true)}>Good</button>
+      <button onClick={() => check(false)}>Bad</button>
     </div>
   );
 }

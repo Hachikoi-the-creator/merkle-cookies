@@ -1,26 +1,23 @@
-import { utf8ToBytes } from "ethereum-cryptography/utils";
-import { Proof } from "./merkleTree";
+import { keccak256 } from "ethereum-cryptography/keccak";
+import { bytesToHex } from "ethereum-cryptography/utils";
+import { ProofVer } from "./merkleTree";
 
-const { keccak256 } = require("ethereum-cryptography/keccak");
-const { hexToBytes, bytesToHex } = require("ethereum-cryptography/utils");
+const concat = (left: Uint8Array, right: Uint8Array) =>
+  keccak256(Buffer.concat([left, right]));
 
-function concat(left: Uint8Array, right: Uint8Array) {
-  return keccak256(Buffer.concat([left, right]));
-}
-
-export function verifyProof(proof: Proof[], leaf: string, root: string) {
+export function verifyProof(proof: ProofVer[], leaf: string, root: string) {
   proof = proof.map(({ data, left }) => ({
     left,
-    data: hexToBytes(data),
+    data: data,
   }));
 
   let data: Uint8Array = keccak256(Buffer.from(leaf));
 
   for (let i = 0; i < proof.length; i++) {
     if (proof[i].left) {
-      data = concat(utf8ToBytes(proof[i].data), data);
+      data = concat(proof[i].data, data);
     } else {
-      data = concat(data, utf8ToBytes(proof[i].data));
+      data = concat(data, proof[i].data);
     }
   }
 

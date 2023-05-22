@@ -1,9 +1,9 @@
 import { keccak256 } from "ethereum-cryptography/keccak";
 import { bytesToHex } from "ethereum-cryptography/utils";
 
-export type Proof = {
-  data: string;
+export type ProofVer = {
   left: boolean;
+  data: Uint8Array;
 };
 
 export class MerkleTree {
@@ -21,9 +21,9 @@ export class MerkleTree {
 
   getProof(
     index: number,
-    layer: Uint8Array[] = this.leaves,
-    proof: Proof[] = []
-  ): Proof[] {
+    layer = this.leaves,
+    proof: ProofVer[] = []
+  ): ProofVer[] {
     if (layer.length === 1) {
       return proof;
     }
@@ -40,13 +40,9 @@ export class MerkleTree {
         newLayer.push(this.concat(left, right));
 
         if (i === index || i === index - 1) {
-          // true if pair num, bitwise checking last bin byte
-          // index = 1 => !1 => false
-          // index = 2 => !0 => true
-          let isLeft = !(index & 1);
-          const data = isLeft ? bytesToHex(right) : bytesToHex(left);
+          let isLeft = !(index % 2);
           proof.push({
-            data,
+            data: isLeft ? right : left,
             left: !isLeft,
           });
         }
