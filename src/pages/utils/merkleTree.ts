@@ -3,7 +3,7 @@ import { bytesToHex } from "ethereum-cryptography/utils";
 
 export type ProofVer = {
   left: boolean;
-  data: Uint8Array;
+  data: string;
 };
 
 export class MerkleTree {
@@ -42,7 +42,7 @@ export class MerkleTree {
         if (i === index || i === index - 1) {
           let isLeft = !(index % 2);
           proof.push({
-            data: isLeft ? right : left,
+            data: isLeft ? bytesToHex(right) : bytesToHex(left),
             left: !isLeft,
           });
         }

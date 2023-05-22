@@ -1,5 +1,5 @@
 import { keccak256 } from "ethereum-cryptography/keccak";
-import { bytesToHex } from "ethereum-cryptography/utils";
+import { bytesToHex, hexToBytes } from "ethereum-cryptography/utils";
 import { ProofVer } from "./merkleTree";
 
 const concat = (left: Uint8Array, right: Uint8Array) =>
@@ -15,9 +15,9 @@ export function verifyProof(proof: ProofVer[], leaf: string, root: string) {
 
   for (let i = 0; i < proof.length; i++) {
     if (proof[i].left) {
-      data = concat(proof[i].data, data);
+      data = concat(hexToBytes(proof[i].data), data);
     } else {
-      data = concat(data, proof[i].data);
+      data = concat(data, hexToBytes(proof[i].data));
     }
   }
 
