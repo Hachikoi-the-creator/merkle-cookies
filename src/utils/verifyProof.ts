@@ -6,11 +6,6 @@ const concat = (left: Uint8Array, right: Uint8Array) =>
   keccak256(Buffer.concat([left, right]));
 
 export function verifyProof(proof: ProofVer[], leaf: string, root: string) {
-  proof = proof.map(({ data, left }) => ({
-    left,
-    data: data,
-  }));
-
   let data: Uint8Array = keccak256(Buffer.from(leaf));
 
   for (let i = 0; i < proof.length; i++) {

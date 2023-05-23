@@ -6,4 +6,9 @@
 
 body {
   background-color: bisque;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Cookie styles since I dont want to keep using modules that looks horrible in the mark up even worse than tailwind holy moly*/
+.cookie-container {
 }
