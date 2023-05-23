@@ -35,7 +35,7 @@ export default function Root() {
       .catch((e) => {
         console.error(e);
         window.alert(
-          "You cannot have cookie :C \nif you think this is an error add yourself to the good list! @  "
+          "You cannot have cookie :C \nif you think this is an error add yourself to the good list! @ https://github.com/Hachikoi-the-creator/merkle-cookies  "
         );
       });
   };
